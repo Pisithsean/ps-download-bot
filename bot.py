@@ -61,6 +61,7 @@ async def receive_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
+
 # BUTTON CLICK
 async def button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
@@ -84,8 +85,10 @@ async def button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if format_type == "mp4":
 
             ydl_opts = {
-                'format': 'best',
+                'format': 'bestvideo+bestaudio/best',
                 'outtmpl': '%(title)s.%(ext)s',
+                'quiet': True,
+                'noplaylist': True,
             }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -104,6 +107,8 @@ async def button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ydl_opts = {
                 'format': 'bestaudio/best',
                 'outtmpl': '%(title)s.%(ext)s',
+                'quiet': True,
+                'noplaylist': True,
                 'postprocessors': [{
                     'key': 'FFmpegExtractAudio',
                     'preferredcodec': 'mp3',
@@ -113,15 +118,15 @@ async def button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=True)
+                file_name = ydl.prepare_filename(info)
 
-                base = ydl.prepare_filename(info)
-                file_name = os.path.splitext(base)[0] + ".mp3"
+            mp3_file = file_name.rsplit(".", 1)[0] + ".mp3"
 
             await query.message.reply_audio(
-                audio=open(file_name, 'rb')
+                audio=open(mp3_file, 'rb')
             )
 
-            os.remove(file_name)
+            os.remove(mp3_file)
 
     except Exception as e:
         await query.message.reply_text(f"❌ Error:\n{e}")
@@ -139,5 +144,8 @@ app.add_handler(CallbackQueryHandler(button_click))
 
 print("✅ Bot Running...")
 app.run_polling()
+
+
+
 
 
