@@ -90,6 +90,11 @@ async def button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 'quiet': True,
                 'noplaylist': True,
                 'cookiefile': 'cookies.txt',
+                'extractor_args':{
+                    'youtube':{
+                        'player_client':['android']
+                    }
+                },
                 'http_headers': {
                     'User-Agent': 'Mozilla/5.0',
                 },
