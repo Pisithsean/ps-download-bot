@@ -89,6 +89,7 @@ async def button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 'outtmpl': '%(title)s.%(ext)s',
                 'quiet': True,
                 'noplaylist': True,
+                'cookiefile': 'cookies.txt',
             }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
